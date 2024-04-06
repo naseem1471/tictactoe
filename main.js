@@ -7,10 +7,18 @@
   
   
   // Your web app's Firebase configuration
-  const firebaseConfig = {
+  const firebaseConfig = { 
+    apiKey: "AIzaSyAFimP-R_PDw8YKIcVeCmjevBIE-nPDZmU",
+    authDomain: "naseem-akbar.firebaseapp.com",
+    databaseURL: "https://naseem-akbar-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "naseem-akbar",
+    storageBucket: "naseem-akbar.appspot.com",
+    messagingSenderId: "804593419200",
+    appId: "1:804593419200:web:cfce0e173223a99cf7be25"
+  };
    // Your config info here 
   
-  };
+  
   
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
