@@ -1,45 +1,41 @@
+
+ 
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
   import { getDatabase, ref, set, onValue, onChildAdded, push, off, get, onDisconnect } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
   import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
   
-  // TODO: Add SDKs for Firebase products that you want to use
-
-   // Your web app's Firebase configuration
-   const firebaseConfig = {
-    apiKey: "AIzaSyAFimP-R_PDw8YKIcVeCmjevBIE-nPDZmU",
-    authDomain: "naseem-akbar.firebaseapp.com",
-    databaseURL: "https://naseem-akbar-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "naseem-akbar",
-    storageBucket: "naseem-akbar.appspot.com",
-    messagingSenderId: "804593419200",
-    appId: "1:804593419200:web:cfce0e173223a99cf7be25"
+  
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+   // Your config info here 
+  
   };
-
+  
   // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase();
-
-
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase();
+  
     let status = "waiting";
     let playerId;
     let playerRef;
     let players = {};
     let numPlayers, myColor, currentTurn;
     numPlayers = 0;
-    let items = [
+     let items = [
     [0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0]
-    ];
-    var currentBoard;
-
-    var myPlayerNumber = 1;
-
+  ];
+  var currentBoard;
+  
+  var myPlayerNumber = 1;
+  
     const allPlayersRef = ref(getDatabase(), `players`);
-
+  
+  
     onValue(ref(getDatabase(), 'players'), (snapshot) => {
         //Fires whenever a change occurs
         players = snapshot.val() || {};
@@ -211,3 +207,243 @@
   
       }
     }
+  
+    function tallyScore() {
+      const occurrences1 = countOccurrencesof1(items);
+      const occurrences2 = countOccurrencesof2(items);
+      if (myPlayerNumber==1) {
+      document.getElementById("myScore").innerHTML = occurrences1;
+      document.getElementById("otherScore").innerHTML = occurrences2;
+      }
+      if (myPlayerNumber==2) {
+      document.getElementById("myScore").innerHTML = occurrences2;
+      document.getElementById("otherScore").innerHTML = occurrences1;
+      }
+      const hasFour1 = hasFourInARow1(items);
+      const hasFour2 = hasFourInARow2(items);
+      if (hasFour1 && myPlayerNumber == 1) {
+        document.getElementById("won4").innerHTML = "You won 4 in a row, game over!"
+        status = "done";
+      }
+       if (hasFour2 && myPlayerNumber == 1) {
+        document.getElementById("won4").innerHTML = "Your oppenent won 4 in a row, game over!"
+         status = "done";
+      }
+      if (hasFour1 && myPlayerNumber == 2) {
+        document.getElementById("won4").innerHTML = "Your oppenent won 4 in a row, game over!"
+         status = "done";
+      }
+       if (hasFour2 && myPlayerNumber == 2) {
+        document.getElementById("won4").innerHTML = "You won 4 in a row, game over!"
+         status = "done";
+      }
+  
+  
+    }
+    function countOccurrencesof1(items) {
+    let count = 0;
+  
+    // Check rows
+    for (let i = 0; i < 5; i++) {
+      for (let j = 0; j < 3; j++) {
+        if (items[i][j] === 1 && items[i][j + 1] === 1 && items[i][j + 2] === 1) {
+          count++;
+        }
+      }
+    }
+  
+    // Check columns
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 5; j++) {
+        if (items[i][j] === 1 && items[i + 1][j] === 1 && items[i + 2][j] === 1) {
+          count++;
+        }
+      }
+    }
+  
+    // Check diagonals (top-left to bottom-right)
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        if (items[i][j] === 1 && items[i + 1][j + 1] === 1 && items[i + 2][j + 2] === 1) {
+          count++;
+        }
+      }
+    }
+  
+    // Check diagonals (bottom-left to top-right)
+    for (let i = 4; i >= 2; i--) {
+      for (let j = 0; j < 3; j++) {
+        if (items[i][j] === 1 && items[i - 1][j + 1] === 1 && items[i - 2][j + 2] === 1) {
+          count++;
+        }
+      }
+    }
+  
+    return count;
+  }
+  
+  function countOccurrencesof2(items) {
+    let count = 0;
+  
+    // Check rows
+    for (let i = 0; i < 5; i++) {
+      for (let j = 0; j < 3; j++) {
+        if (items[i][j] === 2 && items[i][j + 1] === 2 && items[i][j + 2] === 2) {
+          count++;
+        }
+      }
+    }
+  
+    // Check columns
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 5; j++) {
+        if (items[i][j] === 2 && items[i + 1][j] === 2 && items[i + 2][j] === 2) {
+          count++;
+        }
+      }
+    }
+  
+    // Check diagonals (top-left to bottom-right)
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        if (items[i][j] === 2 && items[i + 1][j + 1] === 2 && items[i + 2][j + 2] === 2) {
+          count++;
+        }
+      }
+    }
+  
+    // Check diagonals (bottom-left to top-right)
+    for (let i = 4; i >= 2; i--) {
+      for (let j = 0; j < 3; j++) {
+        if (items[i][j] === 2 && items[i - 1][j + 1] === 2 && items[i - 2][j + 2] === 2) {
+          count++;
+        }
+      }
+    }
+  
+    return count;
+  }
+  function hasFourInARow1(items) {
+    // Check rows
+    for (let i = 0; i < 5; i++) {
+      for (let j = 0; j < 2; j++) {
+        if (
+          items[i][j] === 1 &&
+          items[i][j + 1] === 1 &&
+          items[i][j + 2] === 1 &&
+          items[i][j + 3] === 1
+        ) {
+          return true;
+        }
+      }
+    }
+  // Check columns 
+   for (let i = 0; i < 2; i++) {
+      for (let j = 0; j < 5; j++) {
+        if (
+          items[i][j] === 1 &&
+          items[i+1][j] === 1 &&
+          items[i+2][j] === 1 &&
+          items[i+3][j] === 1
+        ) {
+          return true;
+        }
+      }
+    }
+  
+    // Check diagonals (top-left to bottom-right)
+    for (let i = 0; i < 2; i++) {
+      for (let j = 0; j < 2; j++) {
+        if (
+          items[i][j] === 1 &&
+          items[i + 1][j + 1] === 1 &&
+          items[i + 2][j + 2] === 1 &&
+          items[i + 3][j + 3] === 1
+        ) {
+          return true;
+        }
+      }
+    }
+  
+    // Check diagonals (bottom-left to top-right)
+    for (let i = 3; i < 5; i++) {
+      for (let j = 0; j < 2; j++) {
+        if (
+          items[i][j] === 1 &&
+          items[i - 1][j + 1] === 1 &&
+          items[i - 2][j + 2] === 1 &&
+          items[i - 3][j + 3] === 1
+        ) {
+          return true;
+        }
+      }
+    }
+  
+    return false;
+  }
+  
+  function hasFourInARow2(items) {
+    // Check rows
+    for (let i = 0; i < 5; i++) {
+      for (let j = 0; j < 2; j++) {
+        if (
+          items[i][j] === 2 &&
+          items[i][j + 1] === 2 &&
+          items[i][j + 2] === 2 &&
+          items[i][j + 3] === 2
+        ) {
+          return true;
+        }
+      }
+    }
+  
+   // Check columns
+    for (let i = 0; i < 2; i++) {
+      for (let j = 0; j < 5; j++) {
+        if (
+          items[i][j] === 2 &&
+          items[i+1][j] === 2 &&
+          items[i+2][j] === 2 &&
+          items[i+3][j] === 2
+        ) {
+          return true;
+        }
+      }
+    }
+    // Check diagonals (top-left to bottom-right)
+    for (let i = 0; i < 2; i++) {
+      for (let j = 0; j < 2; j++) {
+        if (
+          items[i][j] === 2 &&
+          items[i + 1][j + 1] === 2 &&
+          items[i + 2][j + 2] === 2 &&
+          items[i + 3][j + 3] === 2
+        ) {
+          return true;
+        }
+      }
+    }
+  
+    // Check diagonals (bottom-left to top-right)
+    for (let i = 3; i < 5; i++) {
+      for (let j = 0; j < 2; j++) {
+        if (
+          items[i][j] === 2 &&
+          items[i - 1][j + 1] === 2 &&
+          items[i - 2][j + 2] === 2 &&
+          items[i - 3][j + 3] === 2
+        ) {
+          return true;
+        }
+      }
+    }
+  
+    return false;
+  }
+   
+  
+  
+  
+  
+  
+  
