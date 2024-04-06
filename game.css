@@ -1,0 +1,32 @@
+/* Adjust the width and height to suit your design preferences */
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 2px; /* Adjust the gap between squares if desired */
+}
+
+#whoseTurn {
+    text-align: center;
+}
+
+.square {
+    background-color: #000055; /* Set the default background color for squares */
+    border: 2px solid #000000; /* Add border for each square */
+  }
+  
+  /* Set the width and height for the squares */
+  .square {
+  
+    height: 50px; /* Adjust the height to your preference */
+  }
+  
+  /* Add specific styling for player colors */
+  /* Assign different background colors for each player */
+  .square.player1 {
+    background-color: #ff0000; /* Player 1 color (red) */
+  }
+  
+  .square.player2 {
+    background-color: #00ff00; /* Player 2 color (green) */
+  }
