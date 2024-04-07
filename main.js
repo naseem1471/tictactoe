@@ -44,7 +44,7 @@
      const allPlayersRef = ref(getDatabase(), `players`);
   
   
-    onChildAdded(ref(allPlayersRef), (snapshot) => {
+    onValue(ref(allPlayersRef), (snapshot) => {
         //Fires whenever a change occurs
         players = snapshot.val() || {};
         Object.keys(players).forEach((key) => {
