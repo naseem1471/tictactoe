@@ -41,10 +41,10 @@
   
   var myPlayerNumber = 1;
   
-    const allPlayersRef = ref(getDatabase(), `players`);
+     const allPlayersRef = ref(getDatabase(), `players`);
   
   
-    onValue(ref(getDatabase(), 'players'), (snapshot) => {
+    onValue(ref(allPlayersRef), (snapshot) => {
         //Fires whenever a change occurs
         players = snapshot.val() || {};
         Object.keys(players).forEach((key) => {
